@@ -1,6 +1,13 @@
 #pragma once
+#include <vector>
+
+const int HEROES_SUM = 5;
+const int MONSTERS_SUM = 5;
+
+
 
 class Actor {
+    protected:
     std::string name;
     int speed;
     int health;
@@ -33,7 +40,7 @@ class Actor {
         speed = new_speed;
     }
     int get_speed() const {
-        return seeed;
+        return speed;
     }
     void set_health(int new_health) {
         health = new_health;
@@ -54,4 +61,54 @@ class Actor {
         return defence;
     }
 
+};
+
+class Hero : public Actor {
+    int super_power = 0;
+
+    public:
+    Hero() {
+        //init_heroes();
+    }
+    Hero(std::string new_name) {
+        name = new_name;
+        super_power = 0;
+        speed = 1;
+        health = 100;
+        attack = 50;
+        defence = 50;
+    }
+  //  ~Hero(){
+  //     delete 
+  //  }
+    void set_super_power(int new_s_power) {
+        super_power = new_s_power;
+    }
+    int get_super_power() {
+        return super_power;
+    }
+    
+};
+
+class Monster : public Actor {
+    int super_defence;
+
+    public:
+    Monster() {
+        super_defence = 0;
+    }
+    Monster(std::string new_name) {
+        name = new_name;
+        super_defence = 0;
+        speed = 1;
+        health = 100;
+        attack = 50;
+        defence = 50;
+    }
+    void set_super_power(int new_s_defence) {
+        super_defence = new_s_defence;
+    }
+    int get_super_defence() {
+        return super_defence;
+    }
 };

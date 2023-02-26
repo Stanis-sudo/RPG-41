@@ -29,12 +29,27 @@ void turn_on_ncurses() {
 	timeout(TIMEOUT); //Set a max delay for key entry
 }
 
+
+
 //Exit full screen mode - also do this if you ever want to use cout or gtest or something
 void turn_off_ncurses() {
 	clear();
 	endwin(); // End curses mode
 	if (system("clear")) {}
 }
+
+void combat_mode(){
+	turn_off_ncurses();
+	refresh();
+	cout << endl << endl << "        COMBAT MODE" << endl;
+	usleep(1'000'000);
+	clear();
+	refresh();
+	cout << endl << endl << "    Monster goes first" << endl;
+	usleep(1'000'000);
+	turn_on_ncurses();
+}
+
 bool obstacle(int x, int y, const Map& map) {
 	char ch = map.get_character(x, y);
 	if ( ch == '~' or ch == '#') return true;
@@ -48,6 +63,7 @@ int main() {
 	int x = Map::SIZE / 2, y = Map::SIZE / 2; //Start in middle of the world
 	int old_x = -1, old_y = -1;
 	int money = 0;
+	int combat = 0;
 	while (true) {
 		int ch = getch(); // Wait for user input, with TIMEOUT delay
 		if (ch == 'q' || ch == 'Q') break;
@@ -75,6 +91,12 @@ int main() {
 			y++;
 			if (y >= Map::SIZE) y = Map::SIZE - 1; //Clamp value
 		}
+		else if (ch == 'R' or ch == 'r') { 
+			map.init_map();
+			x = Map::SIZE / 2; y = Map::SIZE / 2;
+			money = 0;
+			combat = 0;
+		}
 		else if (ch == ERR) { //No keystroke
 			; //Do nothing
 		}
@@ -86,9 +108,12 @@ int main() {
 		
 		if (map.get_character(x, y) == '$') {
 			money += TREASURE_AMOUNT;
-			map.set_open(x, y);
 		}
 
+		if (map.get_character(x, y) == 'M') {
+			combat_mode();
+			combat++;
+		}
 		//Stop flickering by only redrawing on a change
 		if (x != old_x or y != old_y) {
 			/* Do something like this, idk 
@@ -101,8 +126,9 @@ int main() {
 			}
 			*/
 			//clear(); //Put this in if the screen is getting corrupted
+			map.set_open(x, y);
 			map.draw(x,y);
-			mvprintw(Map::DISPLAY+1,0,"X: %i Y: %i  Score: %i\n",x,y, money);
+			mvprintw(Map::DISPLAY+1,0,"X: %i Y: %i Score: %i Combat: %i\n",x, y, money, combat);
 			refresh();
 		}
 		old_x = x;
