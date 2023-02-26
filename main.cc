@@ -44,6 +44,7 @@ bool obstacle(int x, int y, const Map& map) {
 int main() {
 	turn_on_ncurses(); //DON'T DO CIN or COUT WHEN NCURSES MODE IS ON
 	Map map;
+	
 	int x = Map::SIZE / 2, y = Map::SIZE / 2; //Start in middle of the world
 	int old_x = -1, old_y = -1;
 	int money = 0;
