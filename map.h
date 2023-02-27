@@ -15,6 +15,9 @@ class Map {
 	char get_character(int position_x, int position_y) const{
 			return map.at(position_y).at(position_x);
 	}
+	vector<vector<char>> get_map() const{
+		return map;
+	}
 	void set_open(int position_x, int position_y) {
 			map.at(position_y).at(position_x) = OPEN;
 	}
@@ -24,7 +27,7 @@ class Map {
 
 	//TODO: Write a function to save the map and reload the map
 
-	void save_game(const vector<vector<char>>& map, int x, int y, const string& filename) {
+	void save_game(const vector<vector<char>>& map, int x, int y, int money, int combat, const string& filename) {
 
 		ofstream map_save(filename);
 
@@ -40,14 +43,14 @@ class Map {
 			map_save << endl;
 		}
 
-		map_save << x << y << endl;
+		map_save << x << y << money << combat << endl;
 
 		map_save.close();
 
 
 	}
 
-	void load_game(vector<vector<char>>& map, int& x, int& y, const string& filename) {
+	void load_game(vector<vector<char>>& map, int& x, int& y, int& money, int& combat, const string& filename) {
 		
 		ifstream map_load(filename);
 
@@ -65,8 +68,13 @@ class Map {
 			}
 		}
 
+		
+
+
 		x = map_load.get();
 		y = map_load.get();
+		money = map_load.get();
+		combat = map_load.get();
 		map = retval;
 
 		map_load.close();

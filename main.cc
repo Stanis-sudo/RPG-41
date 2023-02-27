@@ -118,6 +118,12 @@ int main() {
 			money = 0;
 			combat = 0;
 		}
+		else if (ch == 'S' or ch == 's') { 
+			map.save_game(map.get_map(), x, y, money, combat, "map1.txt");
+		}
+		else if (ch == 'L' or ch == 'l') { 
+		//	map.load_game(map.get_map(), x, y, money, combat, "map1.txt");
+		}
 		else if (ch == ERR) { //No keystroke
 			; //Do nothing
 		}
@@ -140,18 +146,7 @@ int main() {
 			increase_defence(heroes, combat);
 			increase_attack(heroes, combat);
 		}
-		//Stop flickering by only redrawing on a change
 		if (x != old_x or y != old_y) {
-			/* Do something like this, idk 
-			if (map.get(x,y) == Map::TREASURE) {
-				map.set(x,y,Map::OPEN);
-				money++;
-			} else if (map.get(x,y) == Map::WALL) {
-				x = old_x;
-				y = old_y;
-			}
-			*/
-			//clear(); //Put this in if the screen is getting corrupted
 			map.set_open(x, y);
 			map.draw(x,y);
 			mvprintw(Map::DISPLAY+1,0,"X: %i Y: %i Score: %i Combat: %i\n",x, y, money, combat);
