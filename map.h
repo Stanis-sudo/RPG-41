@@ -2,7 +2,6 @@
 #include <vector>
 #include <string>
 #include <iostream>
-#include <fstream>
 #include <random>
 #include <ncurses.h>
 using namespace std; //Boo hiss
@@ -23,30 +22,6 @@ class Map {
 	}
 
 	//TODO: Write a function to save the map and reload the map
-
-	void save_game(const vector<vector<char>>& map, int x, int y, const string& filename) {
-
-		ofstream map_save(filename);
-
-		if (!map_save) {
-			cout << "Error: coudln't open " << filename << endl;
-				exit(1);
-			}
-		
-		for (const vector<char>& row : map) {
-			for (char col : row) {
-				map_save << col;
-			}
-			map_save << endl;
-		}
-
-		map_save.close();
-
-
-	}
-
-
-
 	static const char HERO     = 'H';
 	static const char MONSTER  = 'M';
 	static const char WALL     = '#';
