@@ -11,40 +11,105 @@ class Map {
 	vector<vector<char>> map;
 	default_random_engine gen;
 	public:
-	//TODO: Write a getter and a setter to get/set the characters in the map
+	
+	//TOD: Write a getter and a setter to get/set the characters in the map
+	
 	char get_character(int position_x, int position_y) const{
-			return map.at(position_y).at(position_x);
+		return map.at(position_y).at(position_x);
 	}
+
+	vector<vector<char>> get_map() const{
+		return map;
+	}
+
+/*	void set_map(vector<vector<char>> map1) { //stub
+	
+	for(char i = 0; i < SIZE; i++)  {
+		for (char j = 0; j < SIZE; i++)
+			map1.;
+	}
+	}
+*/
 	void set_open(int position_x, int position_y) {
-			map.at(position_y).at(position_x) = OPEN;
+		map.at(position_y).at(position_x) = OPEN;
 	}
+
 	void set_character(int position_x, int position_y, char new_character) {
-			map.at(position_y).at(position_x) = new_character;
+		map.at(position_y).at(position_x) = new_character;
 	}
 
-	//TODO: Write a function to save the map and reload the map
+	//TOD: Write a function to save the map and reload the map
 
-	void save_game(const vector<vector<char>>& map, int x, int y, const string& filename) {
+	void save_game(const vector<vector<char>>& map1, int x, int y, int money, int combat, const string& filename, const string& filename2){
 
 		ofstream map_save(filename);
 
 		if (!map_save) {
-			cout << "Error: coudln't open " << filename << endl;
-				exit(1);
-			}
-		
-		for (const vector<char>& row : map) {
+			cout << "Error: coudln't open " << filename << " for writing." << endl;
+			exit(1);
+		}
+
+		for (const vector<char>& row : map1) {
 			for (char col : row) {
 				map_save << col;
 			}
 			map_save << endl;
 		}
-
 		map_save.close();
+
+		ofstream map_save2(filename2);
+
+		if(!map_save2) {
+			cout << "Error: coudln't open " << filename2 << " for writing." << endl;
+			exit(1);
+
+		}
+
+		map_save2 << x << "," << y << "," << money << "," << combat << ",";
+
+		map_save2.close();
+
 
 
 	}
 
+
+	vector<vector<char>> load_game(const string& filename) {
+		
+		ifstream map_load(filename);
+		if(!map_load){
+			cout << "Unable to read from " << filename << ".\n";
+		exit(1);
+		}
+		
+		vector<vector<char>> retval(SIZE, vector<char>(SIZE));
+		
+		for (auto &row : retval) {
+			for (auto &col : row) {
+				col = map_load.get();
+				if(!map_load){
+					cout << "Unable to read from " << filename << ".\n";
+					exit(1);
+				}
+				if (col == '\n') {
+				col = map_load.get();
+					if(!map_load){
+						cout << "Unable to read from " << filename << ".\n";
+						exit(1);
+					}
+				}
+			}
+		}
+
+			return retval;
+
+	}
+
+
+
+	void load_a(const string& filename) { //stub
+
+	}
 
 
 	static const char HERO     = 'H';
@@ -55,7 +120,7 @@ class Map {
 	static const char TREASURE = '$';
 	static const size_t SIZE = 100; //World is a 100x100 map
 	static const size_t DISPLAY = 30; //Show a 30x30 area at a time
-	//Randomly generate map
+									  //Randomly generate map
 	void init_map() {
 		uniform_int_distribution<int> d100(1,100);
 		map.clear();
