@@ -29,7 +29,7 @@ class Map {
 		ofstream map_save(filename);
 
 		if (!map_save) {
-			cout << "Error: coudln't open " << filename << endl;
+			cout << "Error: coudln't open " << filename << " for writing." << endl;
 				exit(1);
 			}
 		
@@ -40,12 +40,38 @@ class Map {
 			map_save << endl;
 		}
 
+		map_save << x << y << endl;
+
 		map_save.close();
 
 
 	}
 
+	void load_game(vector<vector<char>>& map, int& x, int& y, const string& filename) {
+		
+		ifstream map_load(filename);
 
+		if (!map_load) {
+			cout << "Error: couldn't open " << filename << " for reading." << endl;
+			exit(1);
+		}
+
+		vector<vector<char>> retval(SIZE, vector<char>(SIZE));
+		for(auto& row : retval) {
+			for (auto& col: row) {
+				col = map_load.get();
+				if (col = '\n')
+					col = map_load.get();
+			}
+		}
+
+		x = map_load.get();
+		y = map_load.get();
+		map = retval;
+
+		map_load.close();
+
+	}
 
 	static const char HERO     = 'H';
 	static const char MONSTER  = 'M';
