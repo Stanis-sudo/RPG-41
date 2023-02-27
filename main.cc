@@ -119,10 +119,10 @@ int main() {
 			combat = 0;
 		}
 		else if (ch == 'S' or ch == 's') { 
-			map.save_game(map.get_map(), x, y, money, combat, "map1.txt");
+			map.save_game(map.get_map(), x, y, money, combat, "map1.txt", "mapA.txt");
 		}
-		else if (ch == 'L' or ch == 'l') { 
-		//	map.load_game(map.get_map(), x, y, money, combat, "map1.txt");
+		else if (ch == 'L' or ch == 'l') {
+		//	map.set_map(map.load_game("map1.txt"));
 		}
 		else if (ch == ERR) { //No keystroke
 			; //Do nothing
