@@ -4,6 +4,9 @@
 //#error Delete This!
 #include "map.h"
 #include <unistd.h>
+#include "aux.h"
+#include "actor.h"
+#include <memory>
 
 const int MAX_FPS = 90; //Cap frame rate 
 const unsigned int TIMEOUT = 10; //Milliseconds to wait for a getch to finish
@@ -38,16 +41,30 @@ void turn_off_ncurses() {
 	if (system("clear")) {}
 }
 
-void combat_mode(){
+bool combat_mode(std::vector<std::shared_ptr<Hero>>& heroes){
 	turn_off_ncurses();
-	refresh();
-	cout << endl << endl << "        COMBAT MODE" << endl;
-	usleep(1'000'000);
-	clear();
-	refresh();
-	cout << endl << endl << "    Monster goes first" << endl;
-	usleep(1'000'000);
+	print_battle();
+	usleep(2'000'000);
+	for (auto i = 0; i < HEROES_SUM; ++i) {
+    std::cout << "Name: " << heroes[i]->get_name() << std::endl;
+    std::cout << "Speed: " << heroes[i]->get_speed() << std::endl;
+    std::cout << "Health: " << heroes[i]->get_health() << std::endl;
+    std::cout << "Attack: " << heroes[i]->get_attack() << std::endl;
+    std::cout << "Defence: " << heroes[i]->get_defence() << std::endl;
+    std::cout << "Dead: " << heroes[i]->get_dead() << std::endl;
+    std::cout << "Super Power: " << heroes[i]->get_super_power() << std::endl << std::endl;
+  }
+	usleep(6'000'000);
+	if (system("clear")) {}
+	print_battle();
+	print_win();
+	usleep(2'000'000);
+	if (system("clear")) {}
+	//turn_off_ncurses();
 	turn_on_ncurses();
+	//clear();
+	//refresh();
+	return true;
 }
 
 bool obstacle(int x, int y, const Map& map) {
@@ -59,6 +76,9 @@ bool obstacle(int x, int y, const Map& map) {
 int main() {
 	turn_on_ncurses(); //DON'T DO CIN or COUT WHEN NCURSES MODE IS ON
 	Map map;
+	vector<shared_ptr<Hero>> heroes;
+	init_heroes(heroes);
+	vector<shared_ptr<Actor>> actors;
 	
 	int x = Map::SIZE / 2, y = Map::SIZE / 2; //Start in middle of the world
 	int old_x = -1, old_y = -1;
@@ -94,6 +114,7 @@ int main() {
 		else if (ch == 'R' or ch == 'r') { 
 			map.init_map();
 			x = Map::SIZE / 2; y = Map::SIZE / 2;
+			init_heroes(heroes);
 			money = 0;
 			combat = 0;
 		}
@@ -108,11 +129,16 @@ int main() {
 		
 		if (map.get_character(x, y) == '$') {
 			money += TREASURE_AMOUNT;
+			increase_s_power(heroes, money);
 		}
-
 		if (map.get_character(x, y) == 'M') {
-			combat_mode();
+			if (!combat_mode(heroes)) {
+
+				break;
+			}
 			combat++;
+			increase_defence(heroes, combat);
+			increase_attack(heroes, combat);
 		}
 		//Stop flickering by only redrawing on a change
 		if (x != old_x or y != old_y) {
