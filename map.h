@@ -11,9 +11,9 @@ class Map {
 	vector<vector<char>> map;
 	default_random_engine gen;
 	public:
-	
-	//TOD: Write a getter and a setter to get/set the characters in the map
-	
+
+	// Write a getter and a setter to get/set the characters in the map
+
 	char get_character(int position_x, int position_y) const{
 		return map.at(position_y).at(position_x);
 	}
@@ -22,23 +22,28 @@ class Map {
 		return map;
 	}
 
-/*	void set_map(vector<vector<char>> map1) { //stub
-	
-	for(char i = 0; i < SIZE; i++)  {
-		for (char j = 0; j < SIZE; i++)
-			map1.;
+	void set_map(vector<vector<char>> mapCp, Map& mapOg, const string filename) { //listen i know its ugly but it kinda works. If you a.out, hit S, L, S. Then look at map1.txt you'll see what it's doing
+
+
+		for(int i = 0; i <SIZE-1; i++)  {
+			for (int j = 0; j <SIZE-1; j++) {
+				 mapOg.set_character(i, j, mapCp.at(i).at(j));
+
+			}
+		}
+
+		
 	}
-	}
-*/
+
 	void set_open(int position_x, int position_y) {
-		map.at(position_y).at(position_x) = OPEN;
+		map.at(position_x).at(position_y) = OPEN;
 	}
 
 	void set_character(int position_x, int position_y, char new_character) {
-		map.at(position_y).at(position_x) = new_character;
+		map.at(position_x).at(position_y) = new_character;
 	}
 
-	//TOD: Write a function to save the map and reload the map
+	// Write a function to save the map and reload the map
 
 	void save_game(const vector<vector<char>>& map1, int x, int y, int money, int combat, const string& filename, const string& filename2){
 
@@ -73,44 +78,26 @@ class Map {
 
 	}
 
+	vector<vector<char>> load_game(const string& filename) {//makes a 2d vec of chars for set_map
 
-	vector<vector<char>> load_game(const string& filename) {
-		
 		ifstream map_load(filename);
 		if(!map_load){
 			cout << "Unable to read from " << filename << ".\n";
-		exit(1);
+			exit(1);
 		}
-		
 		vector<vector<char>> retval(SIZE, vector<char>(SIZE));
-		
-		for (auto &row : retval) {
+		for (vector<char>& row : retval) {
 			for (auto &col : row) {
 				col = map_load.get();
 				if(!map_load){
 					cout << "Unable to read from " << filename << ".\n";
 					exit(1);
 				}
-				if (col == '\n') {
-				col = map_load.get();
-					if(!map_load){
-						cout << "Unable to read from " << filename << ".\n";
-						exit(1);
-					}
-				}
 			}
-		}
-
-			return retval;
-
-	}
-
-
-
-	void load_a(const string& filename) { //stub
+		}		
+		return retval;
 
 	}
-
 
 	static const char HERO     = 'H';
 	static const char MONSTER  = 'M';
@@ -211,4 +198,5 @@ class Map {
 	Map() {
 		init_map();
 	}
+
 };
